@@ -44,11 +44,19 @@ const InventoryList = () => {
     };
 
     const handleUpdate = async (id) => {
+        const userRole = localStorage.getItem('user_role');
+        // If user is staff, only send the quantity
+        const dataToSend = userRole === 'staff' 
+            ? { quantity: editData.quantity } 
+            : editData;
+
         try {
-            await axiosInstance.put(`items/${id}/`, editData);
+            await axiosInstance.patch(`items/${id}/`, dataToSend);
             setEditingId(null);
             fetchItems();
-        } catch (error) { alert("Update failed"); }
+        } catch (error) {
+            alert(error.response?.data?.detail || "Update failed");
+        }
     };
 
     useEffect(() => { fetchItems(); }, []);
