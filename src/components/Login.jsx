@@ -8,11 +8,17 @@ const Login = ({ onLoginSuccess }) => {
         e.preventDefault();
         try {
             const response = await axiosInstance.post('token/', credentials);
+            
+            // Save tokens for authentication
             localStorage.setItem('access_token', response.data.access);
             localStorage.setItem('refresh_token', response.data.refresh);
+            // Save the user's role (manager, staff, or user)
+            localStorage.setItem('user_role', response.data.role); 
+            
             onLoginSuccess();
             alert("Logged in successfully!");
         } catch (error) {
+            console.error("Login Error:", error);
             alert("Login failed. Check your credentials.");
         }
     };
