@@ -3,12 +3,12 @@ import axiosInstance from '../api/axiosInstance';
 import AddItemForm from './AddItemForm';
 
 const InventoryList = () => {
-
     const [items, setItems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('all'); 
     const [editingId, setEditingId] = useState(null);
     const [editData, setEditData] = useState({ name: '', category: '', quantity: 0 });
+    const userRole = localStorage.getItem('user_role') || 'user'; 
 
     const fetchItems = async () => {
         try {
@@ -21,18 +21,17 @@ const InventoryList = () => {
 
     const filteredItems = items.filter(item => {
         const search = searchTerm.toLowerCase();
-        if (!search) return true; // Show everything if search box is empty
+        if (!search) return true;
 
         const matchesName = item.name?.toLowerCase().includes(search);
         const matchesCategory = item.category?.toLowerCase().includes(search);
         const matchesQuantity = item.quantity?.toString().includes(search);
 
-        // This logic switches based on the dropdown selection
         if (filterType === 'category') return matchesCategory;
         if (filterType === 'quantity') return matchesQuantity;
         if (filterType === 'name') return matchesName;
         
-        return matchesName || matchesCategory || matchesQuantity; // 'all' option
+        return matchesName || matchesCategory || matchesQuantity;
     });
 
     const handleDelete = async (id) => {
@@ -40,7 +39,7 @@ const InventoryList = () => {
             try {
                 await axiosInstance.delete(`items/${id}/`);
                 fetchItems();
-            } catch (error) { alert("Delete failed"); }
+            } catch (error) { alert("Delete failed: Only managers can delete items."); }
         }
     };
 
@@ -56,11 +55,14 @@ const InventoryList = () => {
 
     return (
         <div className="inventory-list" style={{ padding: '20px' }}>
-            <AddItemForm onItemAdded={fetchItems} />
+            {/*ROLE CHECK: Only Managers can add items  */} 
+            {userRole === 'manager' && (
+                <>
+                    <AddItemForm onItemAdded={fetchItems} />
+                    <hr />
+                </>
+            )}
             
-            <hr />
-
-            {/* SEARCH AND FILTER BAR */}
             <div style={{ margin: '20px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <label><strong>Filter By:</strong></label>
                 <select 
@@ -100,9 +102,21 @@ const InventoryList = () => {
                             <tr key={item.id} style={{ backgroundColor: isLowStock ? '#fff1f1' : 'transparent' }}>
                                 {editingId === item.id ? (
                                     <>
-                                        <td><input value={editData.name} onChange={e => setEditData({...editData, name: e.target.value})} /></td>
+                                        <td>
+                                            <input 
+                                                value={editData.name} 
+                                                disabled={userRole === 'staff'} // Staff cannot edit Name
+                                                onChange={e => setEditData({...editData, name: e.target.value})} 
+                                            />
+                                        </td>
                                         <td>{item.category}</td>
-                                        <td><input type="number" value={editData.quantity} onChange={e => setEditData({...editData, quantity: e.target.value})} /></td>
+                                        <td>
+                                            <input 
+                                                type="number" 
+                                                value={editData.quantity} 
+                                                onChange={e => setEditData({...editData, quantity: e.target.value})} 
+                                            />
+                                        </td>
                                         <td>
                                             <button onClick={() => handleUpdate(item.id)}>Save</button>
                                             <button onClick={() => setEditingId(null)}>Cancel</button>
@@ -116,8 +130,17 @@ const InventoryList = () => {
                                         <td style={{ padding: '10px' }}>{item.category}</td>
                                         <td style={{ padding: '10px', color: isLowStock ? 'red' : 'black' }}>{item.quantity}</td>
                                         <td style={{ padding: '10px' }}>
-                                            <button onClick={() => { setEditingId(item.id); setEditData(item); }}>Edit</button>
-                                            <button onClick={() => handleDelete(item.id)} style={{ color: 'red', marginLeft: '5px' }}>Delete</button>
+                                            {/* ROLE CHECK: Staff/Managers can Edit, but Users cannot */}
+                                            {(userRole === 'manager' || userRole === 'staff') && (
+                                                <button onClick={() => { setEditingId(item.id); setEditData(item); }}>Edit</button>
+                                            )}
+                                            
+                                            {/* ROLE CHECK: Only Managers can Delete */}
+                                            {userRole === 'manager' && (
+                                                <button onClick={() => handleDelete(item.id)} style={{ color: 'red', marginLeft: '5px' }}>Delete</button>
+                                            )}
+                                            
+                                            {userRole === 'user' && <span>View Only</span>}
                                         </td>
                                     </>
                                 )}
