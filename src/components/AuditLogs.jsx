@@ -61,7 +61,7 @@ const AuditLogs = () => {
                         {stockLogs.map(log => (
                             <tr key={log.id}>
                                 <td>{log.user}</td>
-                                <td>{log.item}</td>
+                                <td>{log.item_name || log.item || "Deleted Item"}</td>
                                 <td><strong>{log.action}</strong></td>
                                 <td>{log.details}</td>
                                 <td>{new Date(log.timestamp).toLocaleString()}</td>
