@@ -28,52 +28,70 @@ function App() {
   };
 
   const MainDashboard = () => (
-    <div className="App">
-      <header style={{ padding: '20px', borderBottom: '1px solid #ccc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="app-wrapper">
+      <header className="main-header">
         <h1>Enterprise Inventory Manager</h1>
-        {isLoggedIn && (
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button onClick={() => setView('inventory')} className="nav-btn">Dashboard</button>
-            {isPrivileged && (
-              <button onClick={() => setView('admin')} className="nav-btn admin-btn" style={{ backgroundColor: view === 'admin' ? '#388E3C' : '#4CAF50' }}>
-                User Management
-              </button>
-            )}
-            {isPrivileged && (
-              <button onClick={() => setView('audit')} className="nav-btn audit-btn" style={{ backgroundColor: view === 'audit' ? '#1976D2' : '#2196F3', color: 'white' }}>
-                Audit Logs
-              </button>
-            )}
-            <button onClick={handleLogout} className="nav-btn logout-btn">Logout</button>
-          </div>
-        )}
       </header>
 
-      <main style={{ padding: '20px' }}>
-        {!isLoggedIn ? (
-          <div className="auth-container" style={{ textAlign: 'center' }}>
-            {isRegistering ? (
-              <Register onRegisterSuccess={() => setIsRegistering(false)} onBackToLogin={() => setIsRegistering(false)} />
-            ) : (
-              <div style={{ maxWidth: '350px', margin: '0 auto' }}>
-                <h2>Please Login</h2>
-                <Login onLoginSuccess={handleLoginSuccess} />
-                <p style={{ marginTop: '20px' }}>
-                  Don't have an account?{' '}
-                  <button onClick={() => setIsRegistering(true)} className="link-btn">Create one here</button>
-                </p>
-                
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="dashboard-container">
-            {view === 'inventory' && <><InventoryList /></>}
-            {view === 'admin' && isPrivileged && <><AdminPanel /></>}
-            {view === 'audit' && isPrivileged && <><AuditLogs /></>}
-          </div>
+      <div className={isLoggedIn ? "dashboard-layout" : "auth-layout"}>
+        {isLoggedIn && (
+          <aside className="sidebar">
+            <nav className="nav-menu">
+              <button 
+                onClick={() => setView('inventory')} 
+                className={`nav-btn ${view === 'inventory' ? 'active' : ''}`}
+              >
+                Dashboard
+              </button>
+              
+              {isPrivileged && (
+                <>
+                  <button 
+                    onClick={() => setView('admin')} 
+                    className={`nav-btn admin-btn ${view === 'admin' ? 'active' : ''}`}
+                  >
+                    User Management
+                  </button>
+                  <button 
+                    onClick={() => setView('audit')} 
+                    className={`nav-btn audit-btn ${view === 'audit' ? 'active' : ''}`}
+                  >
+                    Audit Logs
+                  </button>
+                </>
+              )}
+            </nav>
+            <button onClick={handleLogout} className="nav-btn logout-btn">
+              Logout
+            </button>
+          </aside>
         )}
-      </main>
+
+        <main className="main-content">
+          {!isLoggedIn ? (
+            <div className="auth-container">
+              {isRegistering ? (
+                <Register onRegisterSuccess={() => setIsRegistering(false)} onBackToLogin={() => setIsRegistering(false)} />
+              ) : (
+                <div className="login-box">
+                  <h2>Please Login</h2>
+                  <Login onLoginSuccess={handleLoginSuccess} />
+                  <p className="auth-footer">
+                    Don't have an account?{' '}
+                    <button onClick={() => setIsRegistering(true)} className="link-btn">Create one here</button>
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="view-container">
+              {view === 'inventory' && <InventoryList />}
+              {view === 'admin' && isPrivileged && <AdminPanel />}
+              {view === 'audit' && isPrivileged && <AuditLogs />}
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 
