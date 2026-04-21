@@ -99,7 +99,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<MainDashboard />} />
-        <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
+        <Route path="/reset-password/:uid/:token/*" element={<ResetPassword />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
