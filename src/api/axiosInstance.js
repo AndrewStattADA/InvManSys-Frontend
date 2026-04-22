@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://invmansys-backend.onrender.com/api/';
+console.log("VITE_API_URL is:", import.meta.env.VITE_API_URL);
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://super-duper-space-adventure-7v59rwq7qxvqfrrjr-8000.app.github.dev/api';
 
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
