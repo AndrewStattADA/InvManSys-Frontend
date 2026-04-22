@@ -24,7 +24,7 @@ const Register = ({ onRegisterSuccess, onBackToLogin }) => {
                 password: formData.password
             });
             alert("Account created successfully! You can now log in.");
-            onRegisterSuccess(); // Switch user back to login view
+            onRegisterSuccess(); 
         } catch (error) {
             console.error("Registration error:", error.response?.data);
             alert("Registration failed. Username might already be taken.");
@@ -32,42 +32,59 @@ const Register = ({ onRegisterSuccess, onBackToLogin }) => {
     };
 
     return (
-        <div style={{ maxWidth: '300px', margin: 'auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-            <h2>Create Account</h2>
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <input 
-                    type="text" 
-                    placeholder="Username" 
-                    required 
-                    onChange={e => setFormData({...formData, username: e.target.value})} 
-                />
-                <input 
-                    type="email" 
-                    placeholder="Email" 
-                    onChange={e => setFormData({...formData, email: e.target.value})} 
-                />
-                <input 
-                    type="password" 
-                    placeholder="Password" 
-                    required 
-                    onChange={e => setFormData({...formData, password: e.target.value})} 
-                />
-                <input 
-                    type="password" 
-                    placeholder="Confirm Password" 
-                    required 
-                    onChange={e => setFormData({...formData, confirmPassword: e.target.value})} 
-                />
-                <button type="submit" style={{ backgroundColor: '#28a745', color: 'white', padding: '10px' }}>
-                    Register
-                </button>
-            </form>
-            <button 
-                onClick={onBackToLogin} 
-                style={{ marginTop: '10px', background: 'none', border: 'none', color: 'blue', cursor: 'pointer' }}
-            >
-                Already have an account? Log in
-            </button>
+        <div className="login-page">
+            <div className="login-card">
+                <h2>Enterprise Inventory Manager</h2>
+                <div className="login-content">
+                    <h3>Create Account</h3>
+                    <form onSubmit={handleSubmit} className="login-form">
+                        <input 
+                            type="text" 
+                            placeholder="Username" 
+                            required 
+                            value={formData.username}
+                            onChange={e => setFormData({...formData, username: e.target.value})} 
+                        />
+                        <input 
+                            type="email" 
+                            placeholder="Email" 
+                            required
+                            value={formData.email}
+                            onChange={e => setFormData({...formData, email: e.target.value})} 
+                        />
+                        <input 
+                            type="password" 
+                            placeholder="Password" 
+                            required 
+                            value={formData.password}
+                            onChange={e => setFormData({...formData, password: e.target.value})} 
+                        />
+                        <input 
+                            type="password" 
+                            placeholder="Confirm Password" 
+                            required 
+                            value={formData.confirmPassword}
+                            onChange={e => setFormData({...formData, confirmPassword: e.target.value})} 
+                        />
+                        <button type="submit" className="login-submit-btn">
+                            Register
+                        </button>
+                    </form>
+
+                    <div className="signup-container">
+                        <p>
+                            Already have an account? 
+                            <button 
+                                type="button" 
+                                className="create-btn-link" 
+                                onClick={onBackToLogin}
+                            >
+                                Log in
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

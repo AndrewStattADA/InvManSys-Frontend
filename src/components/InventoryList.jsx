@@ -136,59 +136,68 @@ const InventoryList = () => {
             </div>
 
             <h3>Current Inventory ({processedItems.length} items found)</h3>
-            <table border="1" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <thead>
-                    <tr style={{ backgroundColor: '#333', color: 'white' }}>
-                        {/* CLICKABLE SORT HEADERS*/}
-                        <th onClick={() => requestSort('name')} style={{ padding: '10px', cursor: 'pointer' }}>
-                            Name {getSortIndicator('name')}
-                        </th>
-                        <th onClick={() => requestSort('category')} style={{ padding: '10px', cursor: 'pointer' }}>
-                            Category {getSortIndicator('category')}
-                        </th>
-                        <th onClick={() => requestSort('quantity')} style={{ padding: '10px', cursor: 'pointer' }}>
-                            Quantity {getSortIndicator('quantity')}
-                        </th>
-                        <th style={{ padding: '10px' }}>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {processedItems.map(item => {
-                        const isLowStock = item.quantity < 5;
-                        return (
-                            <tr key={item.id} style={{ backgroundColor: isLowStock ? '#fff1f1' : 'transparent' }}>
-                                {editingId === item.id ? (
-                                    <>
-                                        <td><input value={editData.name} disabled={userRole === 'staff'} onChange={e => setEditData({...editData, name: e.target.value})} /></td>
-                                        <td>{item.category}</td>
-                                        <td><input type="number" value={editData.quantity} onChange={e => setEditData({...editData, quantity: e.target.value})} /></td>
-                                        <td>
-                                            <button onClick={() => handleUpdate(item.id)}>Save</button>
-                                            <button onClick={() => setEditingId(null)}>Cancel</button>
-                                        </td>
-                                    </>
-                                ) : (
-                                    <>
-                                        <td style={{ padding: '10px', fontWeight: isLowStock ? 'bold' : 'normal' }}>
-                                            {item.name} {isLowStock && <span style={{ color: 'red', fontSize: '0.8em' }}><br/>(LOW STOCK)</span>}
-                                        </td>
-                                        <td style={{ padding: '10px' }}>{item.category}</td>
-                                        <td style={{ padding: '10px', color: isLowStock ? 'red' : 'black' }}>{item.quantity}</td>
-                                        <td style={{ padding: '10px' }}>
-                                            {(userRole === 'manager' || userRole === 'staff') && (
-                                                <button onClick={() => { setEditingId(item.id); setEditData(item); }}>Edit</button>
-                                            )}
-                                            {userRole === 'manager' && (
-                                                <button onClick={() => handleDelete(item.id)} style={{ color: 'red', marginLeft: '5px' }}>Delete</button>
-                                            )}
-                                        </td>
-                                    </>
-                                )}
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+            <div className="inventory-grid-scroll-area">
+                <div className="inventory-grid-container">
+                    {processedItems.map(item => (
+                        <div key={item.id} className={`grid-card ${item.quantity < 5 ? 'low-stock' : ''}`}>
+                            
+                            {/* Check if this specific item is in Edit Mode */}
+                            {editingId === item.id ? (
+                                <>
+                                    <div className="card-info">
+                                        <div className="card-title">
+                                            <input 
+                                                className="edit-input"
+                                                value={editData.name} 
+                                                disabled={userRole === 'staff'} 
+                                                onChange={e => setEditData({...editData, name: e.target.value})} 
+                                            />
+                                        </div>
+                                        <div className="card-detail">Category: {item.category || 'General'}</div>
+                                        <div className="card-detail">
+                                            Quantity: 
+                                            <input 
+                                                type="number" 
+                                                className="edit-input qty-edit"
+                                                value={editData.quantity} 
+                                                onChange={e => setEditData({...editData, quantity: e.target.value})} 
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="card-actions">
+                                        <button onClick={() => handleUpdate(item.id)}>Save</button>
+                                        <button onClick={() => setEditingId(null)}>Cancel</button>
+                                    </div>
+                                </>
+                            ) : (
+                                /* Normal View Mode */
+                                <>
+                                    <div className="card-info">
+                                        <div className="card-title">
+                                            <strong>{item.name}</strong>
+                                            {item.quantity < 5 && <span className="low-stock-label">(LOW STOCK)</span>}
+                                        </div>
+                                        <div className="card-detail">Category: {item.category || 'General'}</div>
+                                        <div className="card-detail">
+                                            Quantity: <span className={item.quantity < 5 ? 'low-stock-text' : ''}>{item.quantity}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="card-actions">
+                                        {/* Make sure we set BOTH the ID and the current item data when clicking edit */}
+                                        {(userRole === 'manager' || userRole === 'staff') && (
+                                            <button onClick={() => { setEditingId(item.id); setEditData(item); }}>Edit</button>
+                                        )}
+                                        {userRole === 'manager' && (
+                                            <button className="delete-btn" onClick={() => handleDelete(item.id)}>Delete</button>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };

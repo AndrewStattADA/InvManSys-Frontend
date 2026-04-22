@@ -71,16 +71,16 @@ function App() {
           {!isLoggedIn ? (
             <div className="auth-container">
               {isRegistering ? (
-                <Register onRegisterSuccess={() => setIsRegistering(false)} onBackToLogin={() => setIsRegistering(false)} />
+                <Register 
+                  onRegisterSuccess={() => setIsRegistering(false)} 
+                  onBackToLogin={() => setIsRegistering(false)} 
+                />
               ) : (
-                <div className="login-box">
-                  <h2>Please Login</h2>
-                  <Login onLoginSuccess={handleLoginSuccess} />
-                  <p className="auth-footer">
-                    Don't have an account?{' '}
-                    <button onClick={() => setIsRegistering(true)} className="link-btn">Create one here</button>
-                  </p>
-                </div>
+                /* We pass the function to Login here */
+                <Login 
+                  onLoginSuccess={handleLoginSuccess} 
+                  onShowRegister={() => setIsRegistering(true)} 
+                />
               )}
             </div>
           ) : (

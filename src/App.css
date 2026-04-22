@@ -103,10 +103,195 @@
   height: 80vh;
 }
 
-.login-box {
-  width: 350px;
-  padding: 30px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+/* --- Login Page Centering --- */
+.login-page {
+    display: flex;
+    justify-content: center; /* Horizontal center */
+    align-items: center;     /* Vertical center */
+    min-height: 100vh;       /* Full screen height */
+    background-color: #f8f9fa; 
+}
+
+/* --- The Login Card --- */
+.login-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow like your screenshots */
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+.login-card h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.login-card h3 {
+    margin-bottom: 1rem;
+    color: #555;
+}
+
+/* --- Form Elements --- */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.login-form input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #f0f4f8; /* Matches the tint in image_709ecb.png */
+}
+
+.login-submit-btn {
+    padding: 10px;
+    background-color: #efefef;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.login-submit-btn:hover {
+    background-color: #e2e2e2;
+}
+
+.link-btn {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.link-btn:hover {
+    text-decoration: underline;
+}
+
+.status-message {
+    margin-top: 10px;
+    color: green;
+    font-size: 0.85rem;
+}
+/* --- Styles for the newly moved footer area --- */
+.signup-container {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee; /* Optional: adds a nice separator line */
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.create-btn-link {
+    display: inline-block;
+    color: #007bff;
+    text-decoration: underline;
+    font-weight: 500;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.create-btn-link:hover {
+    color: #0056b3;
+}
+/* --- New Grid Layout for Inventory Items (Red Outline Area) --- */
+
+.inventory-grid-scroll-area {
+    /* Sets the height to fit exactly 2 rows of cards. 
+       If your cards get taller due to long text, you may need to increase this number slightly (e.g., 380px) */
+    max-height: 500px; 
+    overflow-y: auto; /* Forces the vertical scrollbar to appear after 2 rows */
+    padding-right: 10px; /* Adds space so the scrollbar doesn't cover your cards */
+    margin-top: 15px;
+}
+
+.inventory-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Strictly enforces 3 columns per row */
+    gap: 15px; /* Space between the cards */
+}
+
+.grid-card {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 16px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 150px; /* Keeps rows uniformly sized */
+}
+
+/* Recreates the light red tint for low stock items from your table */
+.grid-card.low-stock {
+    background-color: #fff5f5;
+    border-color: #fc8181;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.low-stock-label {
+    color: #e53e3e;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.low-stock-text {
+    color: #e53e3e;
+    font-weight: bold;
+}
+
+.card-detail {
+    font-size: 0.9rem;
+    color: #4a5568;
+    margin-bottom: 6px;
+}
+
+.card-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.card-actions button {
+    padding: 5px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: 1px solid #cbd5e0;
+    background: white;
+    border-radius: 4px;
+}
+
+.card-actions .delete-btn {
+    color: #e53e3e;
+}
+
+/* --- Edit Mode Inputs --- */
+.edit-input {
+    width: 90%;
+    padding: 4px 8px;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.qty-edit {
+    width: 70px;
+    margin-left: 8px;
 }
