@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
 
+/**
+ * Register Component
+ * Facilitates new user account creation with basic validation and error handling.
+ * @param {Function} onRegisterSuccess - Callback to trigger navigation or UI change after successful signup.
+ * @param {Function} onBackToLogin - Callback to return the user to the login view.
+ */
 const Register = ({ onRegisterSuccess, onBackToLogin }) => {
+    // Single state object to manage all registration form fields
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -9,23 +16,33 @@ const Register = ({ onRegisterSuccess, onBackToLogin }) => {
         confirmPassword: ''
     });
 
+    /**
+     * Handles form submission, performs password validation, and makes API request.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        // Basic client-side validation to ensure password consistency
         if (formData.password !== formData.confirmPassword) {
             alert("Passwords do not match!");
             return;
         }
 
         try {
+            // Sends registration data to the backend
+            // Note: confirmPassword is not sent to the server, only used for local validation
             await axiosInstance.post('register/', {
                 username: formData.username,
                 email: formData.email,
                 password: formData.password
             });
+            
             alert("Account created successfully! You can now log in.");
+            
+            // Execute success callback (usually redirects to login or logs the user in)
             onRegisterSuccess(); 
         } catch (error) {
+            // Logs specific backend error data for debugging
             console.error("Registration error:", error.response?.data);
             alert("Registration failed. Username might already be taken.");
         }
@@ -38,6 +55,9 @@ const Register = ({ onRegisterSuccess, onBackToLogin }) => {
                 <div className="login-content">
                     <h3>Create Account</h3>
                     <form onSubmit={handleSubmit} className="login-form">
+                        {/* Input change handlers use functional state updates with the spread operator 
+                           to preserve other fields while updating the target field.
+                        */}
                         <input 
                             type="text" 
                             placeholder="Username" 

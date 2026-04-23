@@ -2,17 +2,33 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
 import AddItemForm from './AddItemForm';
 
+/**
+ * InventoryList Component
+ * The main dashboard for viewing, searching, sorting, and managing inventory.
+ * Features: Multi-parameter filtering, dynamic sorting, and inline editing.
+ */
 const InventoryList = () => {
+    // --- State Management ---
     const [items, setItems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [minQty, setMinQty] = useState('');
     const [maxQty, setMaxQty] = useState('');
     const [lowStockOnly, setLowStockOnly] = useState(false);
+    
+    // Sort state: defaults to sorting by name ascending
     const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
-    const [editingId, setEditingId] = useState(null);
+    
+    // UI state for inline editing
+    const [editingId, setEditingId] = useState(null); // ID of the item currently being edited
     const [editData, setEditData] = useState({ name: '', category: '', quantity: 0 });
+
+    // Authorization: Determine what actions the user can perform
     const userRole = localStorage.getItem('user_role') || 'user'; 
+
+    /**
+     * Fetches all inventory items from the API
+     */
     const fetchItems = async () => {
         try {
             const response = await axiosInstance.get('items/');
@@ -22,6 +38,9 @@ const InventoryList = () => {
         }
     };
 
+    /**
+     * Toggles sort direction or changes the sort key
+     */
     const requestSort = (key) => {
         let direction = 'asc';
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -30,7 +49,10 @@ const InventoryList = () => {
         setSortConfig({ key, direction });
     };
 
-    // Combined Filter & Sort
+    /**
+     * Processed Items: Applies all filters and then sorts the result.
+     * This runs on every render to ensure the UI stays in sync with filter inputs.
+     */
     const processedItems = items
         .filter(item => {
             const matchesName = item.name?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -40,16 +62,17 @@ const InventoryList = () => {
             const min = minQty === '' ? -Infinity : parseInt(minQty);
             const max = maxQty === '' ? Infinity : parseInt(maxQty);
             const matchesQuantity = qty >= min && qty <= max;
-            // Low Stock Toggle (Threshold of 5)
+            
+            // Logic for the Low Stock alert (Threshold set to 5)
             const matchesLowStock = lowStockOnly ? qty < 5 : true;
 
             return matchesName && matchesCategory && matchesQuantity && matchesLowStock;
         })
         .sort((a, b) => {
-            // Numeric sort for quantity, string sort for others
             let valA = a[sortConfig.key];
             let valB = b[sortConfig.key];
 
+            // Handle numeric vs string sorting logic
             if (sortConfig.key === 'quantity') {
                 valA = parseInt(valA);
                 valB = parseInt(valB);
@@ -63,26 +86,35 @@ const InventoryList = () => {
             return 0;
         });
 
+    // Derive unique categories from the items list for the dropdown filter
     const categories = ['all', ...new Set(items.map(item => item.category).filter(Boolean))];
 
     useEffect(() => { fetchItems(); }, []);
 
+    // Visual helper for table/grid headers to show current sort state
     const getSortIndicator = (key) => {
         if (sortConfig.key !== key) return '↕';
         return sortConfig.direction === 'asc' ? '↑' : '↓';
     };
 
+    /**
+     * Submits the updated item data. 
+     * Permission logic: Staff can only update quantity, Managers can update everything.
+     */
     const handleUpdate = async (id) => {
         const dataToSend = userRole === 'staff' ? { quantity: editData.quantity } : editData;
         try {
             await axiosInstance.patch(`items/${id}/`, dataToSend);
             setEditingId(null);
-            fetchItems();
+            fetchItems(); // Refresh list after update
         } catch (error) {
             alert(error.response?.data?.detail || "Update failed");
         }
     };
 
+    /**
+     * Deletes an item from the database (Manager only)
+     */
     const handleDelete = async (id) => {
         if (window.confirm("Delete this item?")) {
             try {
@@ -94,13 +126,14 @@ const InventoryList = () => {
 
     return (
         <div className="inventory-list" style={{ padding: '20px' }}>
+            {/* Show 'Add Item' form only to Managers */}
             {userRole === 'manager' && <><AddItemForm onItemAdded={fetchItems} /><hr /></>}
             
+            {/* Filter Toolbar Section */}
             <div style={{ 
                 margin: '20px 0', display: 'flex', flexWrap: 'wrap', gap: '20px', 
                 alignItems: 'center', backgroundColor: '#f4f4f4', padding: '15px', borderRadius: '8px' 
             }}>
-                {/* Filter Controls */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                     <label><strong>Search Name:</strong></label>
                     <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{ padding: '8px' }} />
@@ -121,7 +154,6 @@ const InventoryList = () => {
                     </div>
                 </div>
 
-                {/*LOW STOCK CHECKBOX */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '20px' }}>
                     <input 
                         type="checkbox" 
@@ -135,13 +167,14 @@ const InventoryList = () => {
                 <button onClick={() => {setSearchTerm(''); setSelectedCategory('all'); setMinQty(''); setMaxQty(''); setLowStockOnly(false);}} style={{ marginTop: '20px', padding: '8px 15px' }}>Reset</button>
             </div>
 
+            {/* Inventory Display Section */}
             <h3>Current Inventory ({processedItems.length} items found)</h3>
             <div className="inventory-grid-scroll-area">
                 <div className="inventory-grid-container">
                     {processedItems.map(item => (
                         <div key={item.id} className={`grid-card ${item.quantity < 5 ? 'low-stock' : ''}`}>
                             
-                            {/* Check if this specific item is in Edit Mode */}
+                            {/* --- Toggle between Edit Mode and View Mode --- */}
                             {editingId === item.id ? (
                                 <>
                                     <div className="card-info">
@@ -149,7 +182,7 @@ const InventoryList = () => {
                                             <input 
                                                 className="edit-input"
                                                 value={editData.name} 
-                                                disabled={userRole === 'staff'} 
+                                                disabled={userRole === 'staff'} // Staff cannot change item names
                                                 onChange={e => setEditData({...editData, name: e.target.value})} 
                                             />
                                         </div>
@@ -170,7 +203,6 @@ const InventoryList = () => {
                                     </div>
                                 </>
                             ) : (
-                                /* Normal View Mode */
                                 <>
                                     <div className="card-info">
                                         <div className="card-title">
@@ -184,7 +216,7 @@ const InventoryList = () => {
                                     </div>
                                     
                                     <div className="card-actions">
-                                        {/* Make sure we set BOTH the ID and the current item data when clicking edit */}
+                                        {/* Managers and Staff can edit, but their save logic differs (handled in handleUpdate) */}
                                         {(userRole === 'manager' || userRole === 'staff') && (
                                             <button onClick={() => { setEditingId(item.id); setEditData(item); }}>Edit</button>
                                         )}

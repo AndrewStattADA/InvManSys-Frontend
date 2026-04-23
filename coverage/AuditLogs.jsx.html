@@ -160,19 +160,51 @@
 <a name='L95'></a><a href='#L95'>95</a>
 <a name='L96'></a><a href='#L96'>96</a>
 <a name='L97'></a><a href='#L97'>97</a>
-<a name='L98'></a><a href='#L98'>98</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -181,7 +213,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -190,6 +224,7 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -221,7 +256,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -260,28 +298,43 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
 &nbsp;
+/**
+ * AuditLogs Component
+ * Displays a historical record of system activities, split into inventory 
+ * changes and user administrative actions.
+ */
 const AuditLogs = () =&gt; {
+    // State to hold data for the two different types of logs
     const [stockLogs, setStockLogs] = useState([]);
     const [userLogs, setUserLogs] = useState([]);
+    
+    // Toggle state to switch between 'stock' and 'users' view
     const [activeTab, setActiveTab] = useState('stock'); 
     const [loading, setLoading] = useState(true);
 &nbsp;
+    /**
+     * Fetches both sets of logs simultaneously to improve performance.
+     */
     const fetchLogs = async () =&gt; {
         setLoading(true);
         try {
+            // Promise.all runs requests in parallel rather than sequentially
             const [stockRes, userRes] = await Promise.all([
                 axiosInstance.get('stock-logs/'),
                 axiosInstance.get('user-action-logs/')
             ]);
+            
             setStockLogs(stockRes.data);
             setUserLogs(userRes.data);
         } catch (error) {
 <span class="cstat-no" title="statement not covered" >            console.error("Error fetching logs:", error);</span>
         } finally {
+            // Ensure loading spinner is turned off regardless of success or failure
             setLoading(false);
         }
     };
 &nbsp;
+    // Load data once when the component is first mounted
     useEffect(() =&gt; { fetchLogs(); }, []);
 &nbsp;
     if (loading) return &lt;p&gt;Loading audit trails...&lt;/p&gt;;
@@ -290,6 +343,7 @@ const AuditLogs = () =&gt; {
         &lt;div className="audit-container" style={{ padding: '20px' }}&gt;
             &lt;h2&gt;System Audit Logs&lt;/h2&gt;
             
+            {/* Navigation Tabs for switching between log categories */}
             &lt;div className="tabs" style={{ marginBottom: '20px' }}&gt;
                 &lt;button 
 <span class="fstat-no" title="function not covered" >                    onClick={() =&gt; <span class="cstat-no" title="statement not covered" >s</span>etActiveTab('stock')}</span>
@@ -305,6 +359,7 @@ const AuditLogs = () =&gt; {
                 &lt;/button&gt;
             &lt;/div&gt;
 &nbsp;
+            {/* Conditional Rendering: Switch between Inventory Table and User Table based on activeTab */}
             {activeTab === 'stock' ? (
                 &lt;table className="admin-table"&gt;
                     &lt;thead&gt;
@@ -320,9 +375,11 @@ const AuditLogs = () =&gt; {
                         {stockLogs.map(log =&gt; (
                             &lt;tr key={log.id}&gt;
                                 &lt;td&gt;{log.user}&lt;/td&gt;
+                                {/* Fallback logic in case the linked item was deleted from the database */}
                                 &lt;td&gt;{log.item_name || <span class="branch-1 cbranch-no" title="branch not covered" >log.item || <span class="branch-2 cbranch-no" title="branch not covered" >"</span>Deleted Item"}&lt;/td&gt;</span>
                                 &lt;td&gt;&lt;strong&gt;{log.action}&lt;/strong&gt;&lt;/td&gt;
                                 &lt;td&gt;{log.details}&lt;/td&gt;
+                                {/* Formats the raw timestamp into a human-readable local date/time */}
                                 &lt;td&gt;{new Date(log.timestamp).toLocaleString()}&lt;/td&gt;
                             &lt;/tr&gt;
                         ))}
@@ -361,7 +418,7 @@ export default AuditLogs;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-30T18:49:03.197Z
+                at 2026-04-23T00:10:21.678Z
             </div>
         <script src="prettify.js"></script>
         <script>

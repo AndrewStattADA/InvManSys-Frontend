@@ -122,33 +122,57 @@
 <a name='L57'></a><a href='#L57'>57</a>
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -163,7 +187,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -184,24 +210,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
 &nbsp;
+// Component for adding a new item to the inventory via a form
 const AddItemForm = ({ onItemAdded }) =&gt; {
+    // State hooks to manage form input values
     const [name, setName] = useState('');
     const [categoryName, setCategoryName] = useState(''); 
     const [quantity, setQuantity] = useState(0);
 &nbsp;
+    // Handles form submission logic
     const handleSubmit = async (e) =&gt; {
-        e.preventDefault();
+        e.preventDefault(); // Prevents the default browser page reload
         try {
+            // Sends a POST request to the backend with the form data
             await axiosInstance.post('items/', {
                 name,
                 category_name: categoryName, 
-                quantity: parseInt(quantity)
+                quantity: parseInt(quantity) // Ensures quantity is sent as an integer
             });
+            
+            // Resets form fields to initial state after successful submission
             setName('');
             setCategoryName('');
             setQuantity(0);
+            
+            // Notifies parent component that a new item was added (e.g., to refresh a list)
             <span class="missing-if-branch" title="else path not taken" >E</span>if (onItemAdded) onItemAdded();
         } catch (error) {
+            // Logs error details and alerts the user if the request fails
             console.error("Error adding item:", error);
             alert("Failed to add item. Check console for details.");
         }
@@ -210,7 +245,9 @@ const AddItemForm = ({ onItemAdded }) =&gt; {
     return (
         &lt;div className="add-item-form"&gt;
             &lt;h3&gt;Add New Inventory Item&lt;/h3&gt;
+            {/* Inline styles used for simple layout; handleSubmit handles the data on click/enter */}
             &lt;form onSubmit={handleSubmit} style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}&gt;
+                {/* Controlled Input for Item Name */}
                 &lt;input 
                     type="text" 
                     placeholder="Item Name" 
@@ -218,6 +255,7 @@ const AddItemForm = ({ onItemAdded }) =&gt; {
                     onChange={(e) =&gt; setName(e.target.value)} 
                     required 
                 /&gt;
+                {/* Controlled Input for Category Name */}
                 &lt;input 
                     type="text" 
                     placeholder="Category (e.g., Wood)" 
@@ -225,6 +263,7 @@ const AddItemForm = ({ onItemAdded }) =&gt; {
                     onChange={(e) =&gt; setCategoryName(e.target.value)} 
                     required 
                 /&gt;
+                {/* Controlled Input for Quantity */}
                 &lt;input 
                     type="number" 
                     placeholder="Quantity" 
@@ -247,7 +286,7 @@ export default AddItemForm;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-30T18:49:03.197Z
+                at 2026-04-23T00:10:21.678Z
             </div>
         <script src="prettify.js"></script>
         <script>
